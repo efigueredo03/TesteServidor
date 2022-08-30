@@ -32,15 +32,17 @@ public class Cliente {
 
 	public void rodarCliente() throws UnknownHostException, IOException {
 		
+		String resultado = null;
+		Entrada cadeiaDeEntradas = null;
 		while (true) {
 			// Pedir uma opção para o usuário
 			System.out.println("====== INSIRA UMA OPÇÃO ======");
 			System.out.println("=== (adicionar)  (remover) ===");
 			System.out.println();
-			String resultado = scan.nextLine();
+			resultado = scan.nextLine();
 			
-			// Transforamr a opção no enum correspondente
-			Entrada cadeiaDeEntradas = new EntradaAdicionarUsuario(
+			// Transformar a opção no enum correspondente
+			cadeiaDeEntradas = new EntradaAdicionarUsuario(
 					new EntradaRemoverUsuario(
 							new EntradaSair(
 									new SemEntrada())));
@@ -67,6 +69,7 @@ public class Cliente {
 		
 		this.saida.close();
 		this.socket.close();
+		this.scan.close();
 		
 	}
 	

@@ -14,34 +14,34 @@ public class ThreadSockets extends Thread {
 
 	private Socket socket;
 	private BancoDeDados db;
+	private ObjectInputStream entrada;
 	
-	public ThreadSockets(Socket socket, BancoDeDados db) {
+	public ThreadSockets(Socket socket, BancoDeDados db) throws IOException {
 		this.socket = socket;
 		this.db = db;
+		this.entrada = new ObjectInputStream(this.socket.getInputStream());
 	}
 	
 	public void run() {
-		
-		try {
-			
-			ObjectInputStream entrada = new ObjectInputStream(this.socket.getInputStream());
-			Controle controle = (Controle) entrada.readObject();
-			
-			Comando cadeiaDeComandos = new ComandoAdicionarUsuario(this.db, 
-					new ComandoRemoverUsuario(this.db, 
-							new SemComando()));
-			
-			boolean resultado = cadeiaDeComandos.verificarComando(controle);
-			System.out.println(resultado);
-			
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		while (true) {
+			try {
+				
+				Controle controle = (Controle) this.entrada.readObject();
+				
+				Comando cadeiaDeComandos = new ComandoAdicionarUsuario(this.db, 
+						new ComandoRemoverUsuario(this.db, 
+								new SemComando()));
+				
+				boolean resultado = cadeiaDeComandos.verificarComando(controle);
+				System.out.println(resultado);
+				
+							
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
-		
 		
 	}
 	
